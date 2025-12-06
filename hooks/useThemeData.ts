@@ -27,7 +27,8 @@ export interface Theme {
 const STORAGE_KEY = 'focus_theme_data';
 
 // Default theme colors
-const THEME_COLORS = [
+// Default theme colors
+export const THEME_COLORS = [
     '#0ea5e9', // Sky (Default)
     '#8b5cf6', // Purple
     '#f97316', // Orange

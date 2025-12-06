@@ -9,24 +9,13 @@ import { Card } from '@/components/ui/Card';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { ThemeList } from '@/components/ThemeList';
 import { FocusWidget } from '@/components/FocusWidget';
-import { useThemeData } from '@/hooks/useThemeData';
-
-// Default theme colors
-const THEME_COLORS = [
-  '#0ea5e9', // Sky
-  '#8b5cf6', // Purple
-  '#f97316', // Orange
-  '#10b981', // Emerald
-  '#ec4899', // Pink
-  '#14b8a6', // Teal
-];
+import { useThemeData, THEME_COLORS } from '@/hooks/useThemeData';
 
 export default function Home() {
   const router = useRouter();
   const [theme, setTheme] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [selectedColor, setSelectedColor] = useState(THEME_COLORS[0]);
   const [isLoading, setIsLoading] = useState(false);
   const { themes, createTheme, deleteTheme } = useThemeData();
 
@@ -41,8 +30,14 @@ export default function Home() {
 
     setIsLoading(true);
 
-    // Save theme data
-    const newTheme = createTheme(theme, formatDate(startDate), formatDate(endDate), selectedColor);
+    setIsLoading(true);
+
+    // Determine color based on sequence
+    const nextColorIndex = themes.length % THEME_COLORS.length;
+    const nextColor = THEME_COLORS[nextColorIndex];
+
+    // Save theme data (Use sequential color)
+    const newTheme = createTheme(theme, formatDate(startDate), formatDate(endDate), nextColor);
 
     // Navigate to theme dashboard with ID
     router.push(`/dashboard?id=${newTheme.id}`);
@@ -93,22 +88,6 @@ export default function Home() {
                 placeholder="Select end date"
                 minDate={startDate || undefined}
               />
-            </div>
-
-            <div className={styles.colorSection}>
-              <label className={styles.label}>Choose a Theme Color</label>
-              <div className={styles.colorPalette}>
-                {THEME_COLORS.map(color => (
-                  <button
-                    key={color}
-                    type="button"
-                    className={`${styles.colorBtn} ${selectedColor === color ? styles.selectedColor : ''}`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setSelectedColor(color)}
-                    aria-label={`Select color ${color}`}
-                  />
-                ))}
-              </div>
             </div>
 
             <Button type="submit" size="lg" isLoading={isLoading} disabled={!theme.trim() || !startDate || !endDate}>
