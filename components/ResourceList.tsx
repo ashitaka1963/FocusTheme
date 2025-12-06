@@ -218,10 +218,9 @@ export const ResourceList: React.FC<ResourceListProps> = ({
 
                         {needsUrl && (
                             <Input
-                                placeholder="URL (Title will be auto-fetched)"
+                                placeholder="URL"
                                 value={newUrl}
                                 onChange={(e) => setNewUrl(e.target.value)}
-                                onBlur={handleUrlBlur}
                                 required={needsUrl}
                             />
                         )}
