@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './Timeline.module.css';
 import { Button } from './ui/Button';
 import { Theme } from '@/hooks/useThemeData';
@@ -20,6 +21,7 @@ const hexToRgb = (hex: string) => {
 };
 
 export const Timeline: React.FC<TimelineProps> = ({ themes }) => {
+    const router = useRouter();
     const [currentDate, setCurrentDate] = useState(new Date());
 
     if (themes.length === 0) return null;
@@ -173,7 +175,7 @@ export const Timeline: React.FC<TimelineProps> = ({ themes }) => {
                                         zIndex: 10
                                     }}
                                     title={`${theme.title} (${theme.startDate} - ${theme.endDate})`}
-                                    onClick={() => window.location.href = `/dashboard?id=${theme.id}`}
+                                    onClick={() => router.push(`/dashboard?id=${theme.id}`)}
                                 >
                                     <span className={styles.barLabel} style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
                                         {theme.title}

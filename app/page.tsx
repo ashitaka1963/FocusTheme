@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import styles from './page.module.css';
 import { Button } from '@/components/ui/Button';
@@ -21,6 +22,7 @@ const THEME_COLORS = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [theme, setTheme] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -43,7 +45,7 @@ export default function Home() {
     const newTheme = createTheme(theme, formatDate(startDate), formatDate(endDate), selectedColor);
 
     // Navigate to theme dashboard with ID
-    window.location.href = `/dashboard?id=${newTheme.id}`;
+    router.push(`/dashboard?id=${newTheme.id}`);
   };
 
   // Find active theme for FocusWidget
