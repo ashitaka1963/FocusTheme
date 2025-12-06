@@ -94,7 +94,7 @@ function DashboardContent() {
                         Back to Home
                     </Link>
 
-                    <div className={styles.headerCard} style={{ borderTop: `4px solid ${theme.color || '#0ea5e9'}` }}>
+                    <div className={styles.headerCard}>
                         <div className={styles.headerTop}>
                             <h1 className={styles.title}>
                                 <span className={styles.themeName}>{theme.title}</span>
@@ -111,7 +111,7 @@ function DashboardContent() {
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         className={styles.calendarIcon}
-                                        style={{ color: theme.color || '#0ea5e9' }}
+                                        style={{ color: '#0ea5e9' }}
                                     >
                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -151,7 +151,7 @@ function DashboardContent() {
 
                         <div className={styles.progressSection}>
                             <div className={styles.progressInfo}>
-                                <span className={styles.progressPercent} style={{ color: theme.color || '#0ea5e9' }}>{Math.round(progress)}%</span>
+                                <span className={styles.progressPercent} style={{ color: '#0ea5e9' }}>{Math.round(progress)}%</span>
                                 <span className={styles.progressLabel}>{completedCount} / {totalCount} resources completed</span>
                             </div>
                             <div className={styles.progressBarBg}>
@@ -159,7 +159,7 @@ function DashboardContent() {
                                     className={styles.progressBarFill}
                                     style={{
                                         width: `${progress}%`,
-                                        backgroundColor: theme.color || '#0ea5e9'
+                                        backgroundColor: '#0ea5e9'
                                     }}
                                 />
                             </div>
