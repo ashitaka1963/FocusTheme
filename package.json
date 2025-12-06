@@ -9,11 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/react-datepicker": "^7.0.0",
+    "canvas-confetti": "^1.9.4",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.555.0",
     "next": "16.0.5",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-datepicker": "^8.10.0",
+    "react-dom": "19.2.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -1,0 +1,200 @@
+'use client';
+
+import React, { Suspense, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import styles from './page.module.css';
+import { ResourceList } from '@/components/ResourceList';
+import { Notes } from '@/components/Notes';
+import { ProgressBar } from '@/components/ProgressBar';
+import { QuickStats } from '@/components/QuickStats';
+import { LearningLog } from '@/components/LearningLog';
+import { Button } from '@/components/ui/Button';
+import { DatePicker } from '@/components/ui/DatePicker';
+import { useThemeData } from '@/hooks/useThemeData';
+
+function DashboardContent() {
+    const searchParams = useSearchParams();
+    const themeId = searchParams.get('id');
+    const {
+        theme,
+        isLoading,
+        addResource,
+        removeResource,
+        toggleResourceCompletion,
+        updateNotes,
+        updateThemeDates
+    } = useThemeData(themeId || undefined);
+
+    const [isEditingDates, setIsEditingDates] = useState(false);
+    const [editStartDate, setEditStartDate] = useState<Date | null>(null);
+    const [editEndDate, setEditEndDate] = useState<Date | null>(null);
+
+    useEffect(() => {
+        if (theme) {
+            setEditStartDate(new Date(theme.startDate));
+            setEditEndDate(new Date(theme.endDate));
+        }
+    }, [theme]);
+
+    if (isLoading) return <div className={styles.page}>Loading...</div>;
+
+    if (!theme) {
+        return (
+            <div className={styles.page}>
+                <main className={styles.main}>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Theme not found</h1>
+                        <p>The requested theme could not be found.</p>
+                        <Link href="/">
+                            <Button>Back to Home</Button>
+                        </Link>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
+    const formatDate = (date: Date | null): string => {
+        if (!date) return '';
+        return date.toISOString().split('T')[0].replace(/-/g, '/');
+    };
+
+    const handleEditDates = () => {
+        setEditStartDate(new Date(theme.startDate));
+        setEditEndDate(new Date(theme.endDate));
+        setIsEditingDates(true);
+    };
+
+    const handleSaveDates = () => {
+        if (editStartDate && editEndDate) {
+            const startStr = editStartDate.toISOString().split('T')[0];
+            const endStr = editEndDate.toISOString().split('T')[0];
+            updateThemeDates(theme.id, startStr, endStr);
+            setIsEditingDates(false);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditingDates(false);
+    };
+
+    const completedCount = theme.resources.filter(r => r.completed).length;
+    const totalCount = theme.resources.length;
+    const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+    return (
+        <div className={styles.page}>
+            <main className={styles.main}>
+                <header className={styles.header}>
+                    <Link href="/" className={styles.backLink}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Back to Home
+                    </Link>
+
+                    <div className={styles.headerCard} style={{ borderTop: `4px solid ${theme.color || '#0ea5e9'}` }}>
+                        <div className={styles.headerTop}>
+                            <h1 className={styles.title}>
+                                <span className={styles.themeName}>{theme.title}</span>
+                            </h1>
+                            {!isEditingDates ? (
+                                <div className={styles.dateRow}>
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className={styles.calendarIcon}
+                                        style={{ color: theme.color || '#0ea5e9' }}
+                                    >
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    <p className={styles.dates}>
+                                        {theme.startDate.replace(/-/g, '/')} - {theme.endDate.replace(/-/g, '/')}
+                                    </p>
+                                    <button className={styles.editDateBtn} onClick={handleEditDates}>
+                                        Edit
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className={styles.dateRow}>
+                                    <div style={{ width: '140px' }}>
+                                        <DatePicker
+                                            selected={editStartDate}
+                                            onChange={(date) => setEditStartDate(date)}
+                                            placeholder="Start"
+                                        />
+                                    </div>
+                                    <span className={styles.dateSeparator}>-</span>
+                                    <div style={{ width: '140px' }}>
+                                        <DatePicker
+                                            selected={editEndDate}
+                                            onChange={(date) => setEditEndDate(date)}
+                                            placeholder="End"
+                                            minDate={editStartDate || undefined}
+                                        />
+                                    </div>
+                                    <Button size="sm" onClick={handleSaveDates}>Save</Button>
+                                    <Button variant="ghost" size="sm" onClick={handleCancelEdit}>Cancel</Button>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={styles.progressSection}>
+                            <div className={styles.progressInfo}>
+                                <span className={styles.progressPercent} style={{ color: theme.color || '#0ea5e9' }}>{Math.round(progress)}%</span>
+                                <span className={styles.progressLabel}>{completedCount} / {totalCount} resources completed</span>
+                            </div>
+                            <div className={styles.progressBarBg}>
+                                <div
+                                    className={styles.progressBarFill}
+                                    style={{
+                                        width: `${progress}%`,
+                                        backgroundColor: theme.color || '#0ea5e9'
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div className={styles.content}>
+                    <div className={styles.mainColumn}>
+                        <ResourceList
+                            theme={theme}
+                            addResource={addResource}
+                            removeResource={removeResource}
+                            toggleResourceCompletion={toggleResourceCompletion}
+                        />
+                    </div>
+
+                    <div className={styles.sidebar}>
+                        <QuickStats theme={theme} />
+                        <LearningLog themeId={theme.id} />
+                    </div>
+                </div>
+
+                <div className={styles.notesSection}>
+                    <Notes theme={theme} updateNotes={updateNotes} />
+                </div>
+            </main>
+        </div>
+    );
+}
+
+export default function Dashboard() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <DashboardContent />
+        </Suspense>
+    );
+}

@@ -1,0 +1,33 @@
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.barBackground {
+    width: 100%;
+    height: 8px;
+    background-color: var(--color-surface-hover);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.barFill {
+    height: 100%;
+    background-color: var(--color-primary);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease-out;
+}
+
+.label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.percentage {
+    font-weight: 600;
+    color: var(--color-primary);
+}
