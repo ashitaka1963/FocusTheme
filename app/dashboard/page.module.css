@@ -102,6 +102,57 @@
     color: var(--color-text-muted);
 }
 
+/* Goal Section */
+.goalSection {
+    background: rgba(14, 165, 233, 0.05);
+    border-left: 3px solid var(--color-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.goalLabel {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.goalText {
+    font-size: var(--text-sm);
+    color: var(--color-text-main);
+    line-height: 1.5;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.placeholderGoal {
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.editGoalBtn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    text-decoration: underline;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.editGoalBtn:hover {
+    opacity: 1;
+    color: var(--color-primary);
+}
+
 /* Progress Section */
 .progressSection {
     display: flex;

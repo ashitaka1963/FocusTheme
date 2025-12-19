@@ -15,6 +15,7 @@ export interface Resource {
 export interface Theme {
     id: string;
     title: string;
+    goal: string;
     startDate: string;
     endDate: string;
     createdAt: number;
@@ -60,6 +61,7 @@ export const useThemeData = (themeId?: string) => {
                     // Migration: Ensure all fields exist
                     loadedThemes = loadedThemes.map((t, index) => ({
                         ...t,
+                        goal: t.goal || '',
                         notes: t.notes || '',
                         color: t.color || THEME_COLORS[index % THEME_COLORS.length], // Assign default color if missing
                         resources: t.resources.map(r => ({
@@ -102,10 +104,11 @@ export const useThemeData = (themeId?: string) => {
         }
     };
 
-    const createTheme = (title: string, startDate: string, endDate: string, color: string = THEME_COLORS[0]) => {
+    const createTheme = (title: string, goal: string, startDate: string, endDate: string, color: string = THEME_COLORS[0]) => {
         const newTheme: Theme = {
             id: Date.now().toString(),
             title,
+            goal,
             startDate,
             endDate,
             createdAt: Date.now(),
@@ -169,6 +172,15 @@ export const useThemeData = (themeId?: string) => {
         saveThemes(updatedThemes);
     };
 
+    const updateThemeGoal = (themeId: string, goal: string) => {
+        const updatedThemes = themes.map((t) =>
+            t.id === themeId
+                ? { ...t, goal }
+                : t
+        );
+        saveThemes(updatedThemes);
+    };
+
     const updateThemeDates = (themeId: string, startDate: string, endDate: string) => {
         const updatedThemes = themes.map((t) =>
             t.id === themeId
@@ -197,6 +209,7 @@ export const useThemeData = (themeId?: string) => {
         removeResource,
         toggleResourceCompletion,
         updateNotes,
+        updateThemeGoal,
         updateThemeDates,
         updateThemeColor,
     };

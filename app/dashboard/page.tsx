@@ -10,6 +10,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { QuickStats } from '@/components/QuickStats';
 import { LearningLog } from '@/components/LearningLog';
 import { Button } from '@/components/ui/Button';
+import { Textarea } from '@/components/ui/Textarea';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { useThemeData } from '@/hooks/useThemeData';
 
@@ -23,6 +24,7 @@ function DashboardContent() {
         removeResource,
         toggleResourceCompletion,
         updateNotes,
+        updateThemeGoal,
         updateThemeDates
     } = useThemeData(themeId || undefined);
 
@@ -30,10 +32,14 @@ function DashboardContent() {
     const [editStartDate, setEditStartDate] = useState<Date | null>(null);
     const [editEndDate, setEditEndDate] = useState<Date | null>(null);
 
+    const [isEditingGoal, setIsEditingGoal] = useState(false);
+    const [editGoal, setEditGoal] = useState('');
+
     useEffect(() => {
         if (theme) {
             setEditStartDate(new Date(theme.startDate));
             setEditEndDate(new Date(theme.endDate));
+            setEditGoal(theme.goal || '');
         }
     }, [theme]);
 
@@ -75,8 +81,22 @@ function DashboardContent() {
         }
     };
 
-    const handleCancelEdit = () => {
+    const handleCancelEditDates = () => {
         setIsEditingDates(false);
+    };
+
+    const handleEditGoal = () => {
+        setEditGoal(theme.goal || '');
+        setIsEditingGoal(true);
+    };
+
+    const handleSaveGoal = () => {
+        updateThemeGoal(theme.id, editGoal);
+        setIsEditingGoal(false);
+    };
+
+    const handleCancelEditGoal = () => {
+        setIsEditingGoal(false);
     };
 
     const completedCount = theme.resources.filter(r => r.completed).length;
@@ -144,10 +164,35 @@ function DashboardContent() {
                                         />
                                     </div>
                                     <Button size="sm" onClick={handleSaveDates}>Save</Button>
-                                    <Button variant="ghost" size="sm" onClick={handleCancelEdit}>Cancel</Button>
+                                    <Button variant="ghost" size="sm" onClick={handleCancelEditDates}>Cancel</Button>
                                 </div>
                             )}
                         </div>
+
+                        {!isEditingGoal ? (
+                            <div className={styles.goalSection}>
+                                <div className={styles.goalLabel}>
+                                    Objective
+                                    <button className={styles.editGoalBtn} onClick={handleEditGoal}>Update</button>
+                                </div>
+                                <p className={`${styles.goalText} ${!theme.goal ? styles.placeholderGoal : ''}`}>
+                                    {theme.goal || "No learning goal set for this theme."}
+                                </p>
+                            </div>
+                        ) : (
+                            <div className={styles.goalSection}>
+                                <div className={styles.goalLabel}>Edit Objective</div>
+                                <Textarea
+                                    value={editGoal}
+                                    onChange={(e) => setEditGoal(e.target.value)}
+                                    placeholder="Why are you starting this? What is your final goal?"
+                                />
+                                <div style={{ display: 'flex', gap: 'var(--spacing-sm)', marginTop: 'var(--spacing-xs)' }}>
+                                    <Button size="sm" onClick={handleSaveGoal}>Save Objective</Button>
+                                    <Button variant="ghost" size="sm" onClick={handleCancelEditGoal}>Cancel</Button>
+                                </div>
+                            </div>
+                        )}
 
                         <div className={styles.progressSection}>
                             <div className={styles.progressInfo}>

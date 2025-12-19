@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/Card';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { ThemeList } from '@/components/ThemeList';
@@ -14,6 +15,7 @@ import { useThemeData, THEME_COLORS } from '@/hooks/useThemeData';
 export default function Home() {
   const router = useRouter();
   const [theme, setTheme] = useState('');
+  const [goal, setGoal] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,14 +32,12 @@ export default function Home() {
 
     setIsLoading(true);
 
-    setIsLoading(true);
-
     // Determine color based on sequence
     const nextColorIndex = themes.length % THEME_COLORS.length;
     const nextColor = THEME_COLORS[nextColorIndex];
 
     // Save theme data (Use sequential color)
-    const newTheme = createTheme(theme, formatDate(startDate), formatDate(endDate), nextColor);
+    const newTheme = createTheme(theme, goal, formatDate(startDate), formatDate(endDate), nextColor);
 
     // Navigate to theme dashboard with ID
     router.push(`/dashboard?id=${newTheme.id}`);
@@ -73,6 +73,12 @@ export default function Home() {
               label="Start a new Focus Theme"
               autoFocus
               required
+            />
+            <Textarea
+              placeholder="Why are you starting this? What is your final goal?"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              label="Learning Goal / Why Focus on This?"
             />
             <div className={styles.formRow}>
               <DatePicker

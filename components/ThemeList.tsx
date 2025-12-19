@@ -90,6 +90,12 @@ export const ThemeList: React.FC<ThemeListProps> = ({ themes, onDelete }) => {
                                         )}
                                     </div>
 
+                                    {theme.goal && (
+                                        <div className={styles.goalPreview}>
+                                            "{theme.goal}"
+                                        </div>
+                                    )}
+
                                     <div className={styles.progressSection}>
                                         <ProgressBar
                                             value={progress}
