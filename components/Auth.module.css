@@ -2,9 +2,10 @@
     position: fixed;
     inset: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #010103;
+    background-color: #0c0c0e;
     overflow: hidden;
     z-index: 1000;
 }
@@ -13,7 +14,7 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(circle at center, #0a0a20 0%, #010103 100%);
+    background: #000;
 }
 
 /* Aurora Effect */
@@ -21,93 +22,60 @@
 .gradient2,
 .gradient3 {
     position: absolute;
-    width: 140vw;
-    height: 140vh;
-    filter: blur(120px);
-    opacity: 0.35;
+    width: 100%;
+    height: 100%;
+    filter: blur(80px);
+    opacity: 0.5;
     mix-blend-mode: screen;
     pointer-events: none;
 }
 
 .gradient1 {
-    top: -40%;
+    top: -30%;
     left: -20%;
-    background: radial-gradient(circle at center, #0ea5e9 0%, transparent 60%);
-    animation: aurora1 25s infinite alternate ease-in-out;
+    background: radial-gradient(circle at center, #0ea5e9, transparent 60%);
+    animation: drift 20s infinite alternate ease-in-out;
 }
 
 .gradient2 {
     bottom: -30%;
-    right: -10%;
-    background: radial-gradient(circle at center, #8b5cf6 0%, transparent 65%);
-    animation: aurora2 30s infinite alternate-reverse ease-in-out;
+    right: -20%;
+    background: radial-gradient(circle at center, #8b5cf6, transparent 60%);
+    animation: drift 25s infinite alternate-reverse ease-in-out;
 }
 
 .gradient3 {
-    top: 20%;
-    right: -20%;
-    background: radial-gradient(circle at center, #14b8a6 0%, transparent 55%);
-    animation: aurora3 35s infinite alternate ease-in-out;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center, #1e1b4b, transparent 50%);
+    opacity: 0.3;
 }
 
-@keyframes aurora1 {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(15%, 10%) scale(1.1) rotate(5deg);
-    }
-}
-
-@keyframes aurora2 {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(-10%, -15%) scale(1.2) rotate(-8deg);
-    }
-}
-
-@keyframes aurora3 {
+@keyframes drift {
     0% {
         transform: translate(0, 0) scale(1);
     }
 
     100% {
-        transform: translate(-15%, 20%) scale(1.15);
+        transform: translate(10%, 15%) scale(1.1);
     }
 }
 
 .authCard {
     width: 100%;
     max-width: 440px;
-    padding: 64px 56px !important;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            rgba(255, 255, 255, 0.02) 100%) !important;
-    backdrop-filter: blur(60px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(60px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 32px 40px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(40px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow:
-        0 40px 100px -20px rgba(0, 0, 0, 0.8),
-        inset 0 0 40px rgba(255, 255, 255, 0.02) !important;
-    border-radius: 40px !important;
+        0 24px 64px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 20px !important;
     text-align: left !important;
     position: relative;
     overflow: hidden;
-}
-
-.authCard::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            transparent 100%);
-    pointer-events: none;
-    z-index: 1;
 }
 
 .header {
@@ -118,12 +86,15 @@
 }
 
 .title {
-    font-size: 3.2rem;
-    font-weight: 200;
+    font-size: 3.5rem;
+    font-weight: 300;
     color: #fff;
-    margin-bottom: 20px;
-    letter-spacing: -0.05em;
-    font-family: var(--font-outfit), 'Inter', sans-serif;
+    margin-bottom: 40px;
+    letter-spacing: -0.02em;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .subtitle {
@@ -137,126 +108,150 @@
 .tabContainer {
     display: flex;
     justify-content: center;
-    gap: 56px;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
     position: relative;
     z-index: 2;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tab {
-    padding: 10px 0;
+    flex: 1;
+    padding: 12px 0;
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.25);
-    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.95rem;
     font-weight: 400;
     cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.3s ease;
     position: relative;
     letter-spacing: 0.05em;
+    text-align: center;
 }
 
 .activeTab {
     color: #fff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .activeTab::after {
     content: '';
     position: absolute;
-    bottom: -6px;
-    left: 15%;
-    width: 70%;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #fff, transparent);
+    background: #fff;
     opacity: 0.8;
 }
 
 .form {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    margin-bottom: 48px;
+    gap: 20px;
+    margin-bottom: 24px;
     position: relative;
     z-index: 2;
 }
 
 .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inputWrapper {
     position: relative;
+    width: 100%;
 }
 
 .inputLabel {
     display: block;
-    color: rgba(255, 255, 255, 0.35);
-    font-size: 0.7rem;
-    margin-bottom: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.rawInput {
+    width: 100%;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    padding: 0 16px 0 44px;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    -webkit-text-fill-color: #ffffff;
+}
+
+.rawInput:focus {
+    background-color: rgba(0, 0, 0, 0.55);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Autofill Hack - Force dark background and white text */
+.rawInput:-webkit-autofill,
+.rawInput:-webkit-autofill:hover,
+.rawInput:-webkit-autofill:focus,
+.rawInput:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0 1000px #1a1a1e inset !important;
+    transition: background-color 50000s ease-in-out 0s !important;
 }
 
 .inputIcon {
     position: absolute;
-    left: 20px;
-    bottom: 18px;
-    color: rgba(255, 255, 255, 0.2);
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.4);
     pointer-events: none;
-    transition: all 0.3s ease;
-    z-index: 3;
 }
 
-.input {
-    width: 100%;
-    height: 58px !important;
-    padding: 0 20px 0 56px !important;
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 18px !important;
-    color: #fff !important;
-    font-size: 1rem !important;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-}
-
-.input:focus {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
-    outline: none !important;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.03) !important;
-}
-
-.input:focus+.inputIcon {
-    color: rgba(255, 255, 255, 0.7);
-    transform: scale(1.1);
+.passwordToggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
 }
 
 .submitButton {
-    height: 64px !important;
-    background: #ffffff !important;
-    color: #000000 !important;
-    font-weight: 500 !important;
-    font-size: 1.05rem !important;
-    border-radius: 32px !important;
-    border: none !important;
-    margin-top: 16px;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
-    letter-spacing: 0.02em;
+    width: 100%;
+    height: 52px;
+    background: #e2e8f0;
+    color: #1e293b;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 26px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
 }
 
 .submitButton:hover {
-    background: #f8f8f8 !important;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3) !important;
+    background: #f1f5f9;
+}
+
+.submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .divider {
     display: flex;
     align-items: center;
-    gap: 24px;
-    margin: 48px 0;
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
+    gap: 16px;
+    margin: 24px 0;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.85rem;
     position: relative;
     z-index: 2;
 }
@@ -266,60 +261,57 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.15), transparent);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .oauthContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 48px;
+    gap: 16px;
     position: relative;
     z-index: 2;
+    margin-bottom: 32px;
 }
 
 .oauthButton {
-    height: 56px !important;
-    background: rgba(255, 255, 255, 0.02) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 28px !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    font-size: 0.95rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 14px !important;
-    transition: all 0.3s ease !important;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 26px;
+    color: #fff;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .oauthButton:hover {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
-    color: #fff !important;
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .errorMessage {
-    color: #ff6060;
+    color: #ff4d4d;
     font-size: 0.8rem;
-    margin-top: 8px;
     text-align: center;
 }
 
 .successMessage {
-    color: #60ff90;
+    color: #4ade80;
     font-size: 0.8rem;
-    margin-top: 8px;
     text-align: center;
 }
 
 .quote {
     text-align: center;
-    font-family: var(--font-inter), 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.1);
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    margin-top: 24px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    margin-top: 16px;
     position: relative;
     z-index: 2;
+    font-style: italic;
 }

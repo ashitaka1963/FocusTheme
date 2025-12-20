@@ -83,14 +83,9 @@ export const Auth = () => {
                 <div className={styles.gradient3}></div>
             </div>
 
-            <Card className={styles.authCard}>
-                <div className={styles.header}>
-                    <h1 className={styles.title}>Focus Theme</h1>
-                    <p className={styles.subtitle}>
-                        {isSignUp ? 'Create your account to start learning' : 'Welcome back, focus on your growth'}
-                    </p>
-                </div>
+            <h1 className={styles.title}>Focus Theme</h1>
 
+            <div className={styles.authCard}>
                 <div className={styles.tabContainer}>
                     <button
                         className={`${styles.tab} ${!isSignUp ? styles.activeTab : ''}`}
@@ -109,69 +104,74 @@ export const Auth = () => {
                 <form onSubmit={handleEmailAuth} className={styles.form}>
                     <div className={styles.inputGroup}>
                         <label className={styles.inputLabel}>Email</label>
-                        <Input
-                            type="email"
-                            placeholder="hello@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={styles.input}
-                            required
-                        />
-                        <Mail className={styles.inputIcon} size={20} />
+                        <div className={styles.inputWrapper}>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className={styles.rawInput}
+                                required
+                            />
+                            <Mail className={styles.inputIcon} size={18} />
+                        </div>
                     </div>
                     <div className={styles.inputGroup}>
                         <label className={styles.inputLabel}>Password</label>
-                        <Input
-                            type="password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className={styles.input}
-                            required
-                        />
-                        <Lock className={styles.inputIcon} size={20} />
+                        <div className={styles.inputWrapper}>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className={styles.rawInput}
+                                required
+                            />
+                            <Lock className={styles.inputIcon} size={18} />
+                            <div className={styles.passwordToggle}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4 }}>
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     {error && <p className={styles.errorMessage}>{error}</p>}
                     {message && <p className={styles.successMessage}>{message}</p>}
 
-                    <Button
+                    <button
                         type="submit"
                         className={styles.submitButton}
-                        isLoading={isLoading}
-                        size="lg"
+                        disabled={isLoading}
                     >
-                        {isSignUp ? 'Get Started' : 'Sign In'}
-                    </Button>
+                        {isLoading ? '...' : 'Continue with Email'}
+                    </button>
                 </form>
 
                 <div className={styles.divider}>or</div>
 
                 <div className={styles.oauthContainer}>
-                    <Button
-                        variant="ghost"
-                        className={styles.oauthButton}
-                        onClick={() => handleOAuth('google')}
-                        disabled={isLoading}
-                    >
-                        <Chrome size={20} className={styles.providerIcon} />
-                        Google
-                    </Button>
-                    <Button
-                        variant="ghost"
+                    <button
                         className={styles.oauthButton}
                         onClick={() => handleOAuth('apple')}
                         disabled={isLoading}
                     >
-                        <Apple size={20} className={styles.providerIcon} />
+                        <Apple size={18} />
                         Apple
-                    </Button>
+                    </button>
+                    <button
+                        className={styles.oauthButton}
+                        onClick={() => handleOAuth('google')}
+                        disabled={isLoading}
+                    >
+                        <Chrome size={18} />
+                        Google
+                    </button>
                 </div>
 
                 <p className={styles.quote}>
                     “Find your flow. Master your focus.”
                 </p>
-            </Card>
+            </div>
         </div>
     );
 };
