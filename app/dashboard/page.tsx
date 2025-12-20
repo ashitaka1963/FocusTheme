@@ -56,7 +56,7 @@ function DashboardContent() {
         }
     }, [theme]);
 
-    if (isLoading) return <div className={styles.page}>Loading...</div>;
+    if (isLoading && !theme) return <div className={styles.page}>Loading...</div>;
 
     if (!theme) {
         return (

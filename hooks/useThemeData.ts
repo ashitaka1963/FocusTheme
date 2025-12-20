@@ -29,7 +29,9 @@ export const useThemeData = (themeId?: string) => {
     // Load themes when storage mode or user changes
     useEffect(() => {
         const loadThemes = async () => {
-            setIsLoading(true);
+            if (themes.length === 0 && !theme) {
+                setIsLoading(true);
+            }
             try {
                 if (storageMode === 'supabase' && user) {
                     const sbThemes = await themeService.getSupabaseThemes();
