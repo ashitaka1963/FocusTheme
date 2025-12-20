@@ -22,8 +22,16 @@ export default function Home() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, isLoading: isAuthLoading } = useAuth();
   const { themes, createTheme, deleteTheme, storageMode, isLoading: isLoadingThemes } = useThemeData();
+
+  if (storageMode === 'supabase' && isAuthLoading) {
+    return null; // Or a loading spinner
+  }
+
+  if (storageMode === 'supabase' && !user) {
+    return <Auth />;
+  }
 
   const formatDate = (date: Date | null): string => {
     if (!date) return '';
@@ -61,10 +69,6 @@ export default function Home() {
     const end = new Date(t.endDate);
     return today >= start && today <= end;
   });
-
-  if (storageMode === 'supabase' && !user) {
-    return <Auth />;
-  }
 
   return (
     <div className={styles.page}>
