@@ -7,13 +7,15 @@ import { Input } from './ui/Input';
 import { Card } from './ui/Card';
 import { Mail, Lock, Chrome, Apple, ArrowRight } from 'lucide-react';
 import styles from './Auth.module.css';
+import { useAuth } from '../context/AuthContext';
 
 export const Auth = () => {
+    const { error: globalError } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(globalError?.message || null);
     const [message, setMessage] = useState<string | null>(null);
 
     const handleEmailAuth = async (e: React.FormEvent) => {

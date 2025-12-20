@@ -22,14 +22,14 @@ export default function Home() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
-  const { user, signOut, isLoading: isAuthLoading } = useAuth();
+  const { user, signOut, isLoading: isAuthLoading, error: authError } = useAuth();
   const { themes, createTheme, deleteTheme, storageMode, isLoading: isLoadingThemes } = useThemeData();
 
   if (storageMode === 'supabase' && isAuthLoading) {
     return null; // Or a loading spinner
   }
 
-  if (storageMode === 'supabase' && !user) {
+  if (storageMode === 'supabase' && (!user || authError)) {
     return <Auth />;
   }
 

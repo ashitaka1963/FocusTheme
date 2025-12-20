@@ -31,13 +31,13 @@ function DashboardContent() {
         updateThemeDates
     } = useThemeData(themeId || undefined);
 
-    const { user, isLoading: isAuthLoading } = useAuth();
+    const { user, isLoading: isAuthLoading, error: authError } = useAuth();
 
     if (storageMode === 'supabase' && isAuthLoading) {
         return <div className={styles.page}>Loading session...</div>;
     }
 
-    if (storageMode === 'supabase' && !user) {
+    if (storageMode === 'supabase' && (!user || authError)) {
         return <Auth />;
     }
 

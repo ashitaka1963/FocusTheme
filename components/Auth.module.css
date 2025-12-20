@@ -174,9 +174,9 @@
 .rawInput {
     width: 100%;
     height: 50px;
-    background-color: rgba(0, 0, 0, 0.45);
-    background: rgba(0, 0, 0, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     color: #fff;
     font-size: 0.95rem;
@@ -188,17 +188,17 @@
 }
 
 .rawInput:focus {
-    background-color: rgba(0, 0, 0, 0.55);
-    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
-/* Autofill Hack - Force dark background and white text */
+/* Autofill Hack - Force light glass background and white text */
 .rawInput:-webkit-autofill,
 .rawInput:-webkit-autofill:hover,
 .rawInput:-webkit-autofill:focus,
 .rawInput:-webkit-autofill:active {
     -webkit-text-fill-color: #ffffff !important;
-    -webkit-box-shadow: 0 0 0 1000px #1a1a1e inset !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.1) inset !important;
     transition: background-color 50000s ease-in-out 0s !important;
 }
 
