@@ -2,10 +2,82 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   padding: var(--spacing-xl);
   background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+  align-items: center;
+}
+
+.topHeader {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.storageToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.storageToggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.toggleIcon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.toggleIcon.active {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+}
+
+.userEmail {
+  font-size: var(--text-sm);
+  color: var(--color-text-main);
+}
+
+.signOutBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.signOutBtn:hover {
+  color: #ef4444;
 }
 
 .main {

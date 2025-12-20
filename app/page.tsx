@@ -11,6 +11,9 @@ import { DatePicker } from '@/components/ui/DatePicker';
 import { ThemeList } from '@/components/ThemeList';
 import { FocusWidget } from '@/components/FocusWidget';
 import { useThemeData, THEME_COLORS } from '@/hooks/useThemeData';
+import { Auth } from '@/components/Auth';
+import { useAuth } from '@/context/AuthContext';
+import { Database, LogOut, Settings } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
@@ -18,29 +21,36 @@ export default function Home() {
   const [goal, setGoal] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { themes, createTheme, deleteTheme } = useThemeData();
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+  const { user, signOut } = useAuth();
+  const { themes, createTheme, deleteTheme, storageMode, isLoading: isLoadingThemes } = useThemeData();
 
   const formatDate = (date: Date | null): string => {
     if (!date) return '';
     return date.toISOString().split('T')[0].replace(/-/g, '/');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!theme.trim() || !startDate || !endDate) return;
 
-    setIsLoading(true);
+    setIsLoadingSubmit(true);
 
     // Determine color based on sequence
     const nextColorIndex = themes.length % THEME_COLORS.length;
     const nextColor = THEME_COLORS[nextColorIndex];
 
-    // Save theme data (Use sequential color)
-    const newTheme = createTheme(theme, goal, formatDate(startDate), formatDate(endDate), nextColor);
+    try {
+      // Save theme data (Use sequential color)
+      const newTheme = await createTheme(theme, goal, formatDate(startDate), formatDate(endDate), nextColor);
 
-    // Navigate to theme dashboard with ID
-    router.push(`/dashboard?id=${newTheme.id}`);
+      // Navigate to theme dashboard with ID
+      router.push(`/dashboard?id=${newTheme.id}`);
+    } catch (error) {
+      console.error('Failed to create theme:', error);
+    } finally {
+      setIsLoadingSubmit(false);
+    }
   };
 
   // Find active theme for FocusWidget
@@ -52,8 +62,24 @@ export default function Home() {
     return today >= start && today <= end;
   });
 
+  if (storageMode === 'supabase' && !user) {
+    return <Auth />;
+  }
+
   return (
     <div className={styles.page}>
+      <header className={styles.topHeader}>
+        {user && (
+          <div className={styles.userProfile}>
+            <span className={styles.userEmail}>{user.email}</span>
+            <button onClick={() => signOut()} className={styles.signOutBtn} title="Sign Out">
+              <LogOut size={16} />
+            </button>
+          </div>
+        )}
+      </header>
+
+
       <main className={styles.main}>
         <section className={styles.hero}>
           <h1 className={styles.title}>Focus Theme</h1>
@@ -96,7 +122,7 @@ export default function Home() {
               />
             </div>
 
-            <Button type="submit" size="lg" isLoading={isLoading} disabled={!theme.trim() || !startDate || !endDate}>
+            <Button type="submit" size="lg" isLoading={isLoadingSubmit} disabled={!theme.trim() || !startDate || !endDate}>
               Start Learning
             </Button>
           </form>
@@ -119,6 +145,6 @@ export default function Home() {
 
         <ThemeList themes={themes} onDelete={deleteTheme} />
       </main>
-    </div>
+    </div >
   );
 }

@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { useThemeData } from '@/hooks/useThemeData';
+import { useAuth } from '@/context/AuthContext';
+import { Auth } from '@/components/Auth';
 
 function DashboardContent() {
     const searchParams = useSearchParams();
@@ -20,6 +22,7 @@ function DashboardContent() {
     const {
         theme,
         isLoading,
+        storageMode,
         addResource,
         removeResource,
         toggleResourceCompletion,
@@ -27,6 +30,12 @@ function DashboardContent() {
         updateThemeGoal,
         updateThemeDates
     } = useThemeData(themeId || undefined);
+
+    const { user } = useAuth();
+
+    if (storageMode === 'supabase' && !user) {
+        return <Auth />;
+    }
 
     const [isEditingDates, setIsEditingDates] = useState(false);
     const [editStartDate, setEditStartDate] = useState<Date | null>(null);

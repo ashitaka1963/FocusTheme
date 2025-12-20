@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.89.0",
     "@types/react-datepicker": "^7.0.0",
     "canvas-confetti": "^1.9.4",
     "date-fns": "^4.1.0",
