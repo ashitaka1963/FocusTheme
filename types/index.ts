@@ -7,6 +7,7 @@ export interface Resource {
     url?: string;
     type: ResourceType;
     completed: boolean;
+    position: number;
     created_at?: string;
 }
 

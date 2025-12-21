@@ -25,6 +25,7 @@ function DashboardContent() {
         storageMode,
         addResource,
         removeResource,
+        reorderResource,
         toggleResourceCompletion,
         updateNotes,
         updateThemeGoal,
@@ -32,14 +33,6 @@ function DashboardContent() {
     } = useThemeData(themeId || undefined);
 
     const { user, isLoading: isAuthLoading, error: authError } = useAuth();
-
-    if (storageMode === 'supabase' && isAuthLoading) {
-        return <div className={styles.page}>Loading session...</div>;
-    }
-
-    if (storageMode === 'supabase' && (!user || authError)) {
-        return <Auth />;
-    }
 
     const [isEditingDates, setIsEditingDates] = useState(false);
     const [editStartDate, setEditStartDate] = useState<Date | null>(null);
@@ -50,11 +43,19 @@ function DashboardContent() {
 
     useEffect(() => {
         if (theme) {
-            setEditStartDate(new Date(theme.startDate));
-            setEditEndDate(new Date(theme.endDate));
+            setEditStartDate(theme.startDate ? new Date(theme.startDate) : new Date());
+            setEditEndDate(theme.endDate ? new Date(theme.endDate) : new Date());
             setEditGoal(theme.goal || '');
         }
     }, [theme]);
+
+    if (storageMode === 'supabase' && isAuthLoading) {
+        return <div className={styles.page}>Loading session...</div>;
+    }
+
+    if (storageMode === 'supabase' && (!user || authError)) {
+        return <Auth />;
+    }
 
     if (isLoading && !theme) return <div className={styles.page}>Loading...</div>;
 
@@ -112,8 +113,9 @@ function DashboardContent() {
         setIsEditingGoal(false);
     };
 
-    const completedCount = theme.resources.filter(r => r.completed).length;
-    const totalCount = theme.resources.length;
+    const resources = theme.resources || [];
+    const completedCount = resources.filter(r => r.completed).length;
+    const totalCount = resources.length;
     const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
     return (
@@ -152,7 +154,7 @@ function DashboardContent() {
                                         <line x1="3" y1="10" x2="21" y2="10"></line>
                                     </svg>
                                     <p className={styles.dates}>
-                                        {theme.startDate.replace(/-/g, '/')} - {theme.endDate.replace(/-/g, '/')}
+                                        {theme.startDate?.replace(/-/g, '/') || '----/--/--'} - {theme.endDate?.replace(/-/g, '/') || '----/--/--'}
                                     </p>
                                     <button className={styles.editDateBtn} onClick={handleEditDates}>
                                         Edit
@@ -231,6 +233,7 @@ function DashboardContent() {
                             theme={theme}
                             addResource={addResource}
                             removeResource={removeResource}
+                            reorderResource={reorderResource}
                             toggleResourceCompletion={toggleResourceCompletion}
                         />
                     </div>

@@ -52,8 +52,9 @@ export const themeService = {
                 url: r.url || undefined,
                 type: r.type,
                 completed: r.completed,
+                position: r.position || 0,
                 created_at: r.created_at
-            }))
+            })).sort((a: any, b: any) => (a.position - b.position))
         }));
     },
 
@@ -125,7 +126,8 @@ export const themeService = {
                 title: resource.title,
                 url: resource.url,
                 type: resource.type,
-                completed: resource.completed
+                completed: resource.completed,
+                position: resource.position || 0
             })
             .select()
             .single();
@@ -139,20 +141,24 @@ export const themeService = {
             url: data.url,
             type: data.type,
             completed: data.completed,
+            position: data.position,
             created_at: data.created_at
         };
     },
 
     async updateSupabaseResource(id: string, updates: Partial<Resource>): Promise<void> {
         if (!supabase) throw new Error('Supabase client is not initialized');
+
+        const dbUpdates: any = {};
+        if (updates.title !== undefined) dbUpdates.title = updates.title;
+        if (updates.url !== undefined) dbUpdates.url = updates.url;
+        if (updates.type !== undefined) dbUpdates.type = updates.type;
+        if (updates.completed !== undefined) dbUpdates.completed = updates.completed;
+        if (updates.position !== undefined) dbUpdates.position = updates.position;
+
         const { error } = await supabase
             .from('resources')
-            .update({
-                title: updates.title,
-                url: updates.url,
-                type: updates.type,
-                completed: updates.completed
-            })
+            .update(dbUpdates)
             .eq('id', id);
 
         if (error) throw error;

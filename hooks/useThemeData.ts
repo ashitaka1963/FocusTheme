@@ -33,17 +33,31 @@ export const useThemeData = (themeId?: string) => {
                 setIsLoading(true);
             }
             try {
-                if (storageMode === 'supabase' && user) {
+                if (storageMode === 'supabase') {
+                    if (!user) {
+                        // Wait for user to be loaded
+                        return;
+                    }
                     const sbThemes = await themeService.getSupabaseThemes();
                     setThemes(sbThemes);
                     if (themeId) {
-                        setTheme(sbThemes.find(t => t.id === themeId) || null);
+                        const found = sbThemes.find(t => t.id === themeId);
+                        if (found) {
+                            setTheme({ ...found, resources: found.resources || [] });
+                        } else {
+                            setTheme(null);
+                        }
                     }
                 } else {
                     const localThemes = themeService.getLocalThemes();
                     setThemes(localThemes);
                     if (themeId) {
-                        setTheme(localThemes.find(t => t.id === themeId) || null);
+                        const found = localThemes.find(t => t.id === themeId);
+                        if (found) {
+                            setTheme({ ...found, resources: found.resources || [] });
+                        } else {
+                            setTheme(null);
+                        }
                     }
                 }
             } catch (error) {
@@ -95,20 +109,87 @@ export const useThemeData = (themeId?: string) => {
 
     const addResource = async (resource: Resource) => {
         if (!theme) return;
+        const maxPos = theme.resources.length > 0
+            ? Math.max(...theme.resources.map(r => r.position))
+            : -1;
+        const resourceWithPos = { ...resource, position: maxPos + 1 };
+
         if (storageMode === 'supabase' && user) {
-            const newResource = await themeService.addSupabaseResource({ ...resource, theme_id: theme.id });
+            const newResource = await themeService.addSupabaseResource({ ...resourceWithPos, theme_id: theme.id });
             const updatedThemes = themes.map(t =>
-                t.id === theme.id ? { ...t, resources: [...t.resources, newResource] } : t
+                t.id === theme.id ? { ...t, resources: [...t.resources, newResource].sort((a, b) => a.position - b.position) } : t
             );
             setThemes(updatedThemes);
-            setTheme({ ...theme, resources: [...theme.resources, newResource] });
+            setTheme({ ...theme, resources: [...theme.resources, newResource].sort((a, b) => a.position - b.position) });
         } else {
             const updatedThemes = themes.map(t =>
-                t.id === theme.id ? { ...t, resources: [...t.resources, resource] } : t
+                t.id === theme.id ? { ...t, resources: [...t.resources, resourceWithPos].sort((a, b) => a.position - b.position) } : t
             );
             themeService.saveLocalThemes(updatedThemes);
             setThemes(updatedThemes);
-            setTheme({ ...theme, resources: [...theme.resources, resource] });
+            setTheme({ ...theme, resources: [...theme.resources, resourceWithPos].sort((a, b) => a.position - b.position) });
+        }
+    };
+
+    const reorderResource = async (resourceId: string, direction: 'up' | 'down') => {
+        if (!theme) return;
+
+        // Sort by position, then by creation date to handle identical positions cleanly
+        const resources = [...theme.resources].sort((a, b) => {
+            if (a.position !== b.position) return a.position - b.position;
+            const dA = a.created_at ? new Date(a.created_at).getTime() : 0;
+            const dB = b.created_at ? new Date(b.created_at).getTime() : 0;
+            return dA - dB;
+        });
+
+        const currentIndex = resources.findIndex(r => r.id === resourceId);
+        if (currentIndex === -1) return;
+
+        // Find neighbor OF THE SAME TYPE for per-category reordering
+        const sameTypeResources = resources.filter(r => r.type === resources[currentIndex].type);
+        const typeIndex = sameTypeResources.findIndex(r => r.id === resourceId);
+
+        const newTypeIndex = direction === 'up' ? typeIndex - 1 : typeIndex + 1;
+        if (newTypeIndex < 0 || newTypeIndex >= sameTypeResources.length) return;
+
+        const r1 = sameTypeResources[typeIndex];
+        const r2 = sameTypeResources[newTypeIndex];
+
+        // Ensure we always have distinct positions. 
+        // If they are the same (e.g. both 0), we assign p2 as p1 + 1 (or -1) 
+        // effectively forcing a swap that will persist correctly.
+        let p1 = r1.position;
+        let p2 = r2.position;
+
+        if (p1 === p2) {
+            if (direction === 'up') p1++; else p2++;
+        }
+
+        const updatedResources = resources.map(r => {
+            if (r.id === r1.id) return { ...r, position: p2 };
+            if (r.id === r2.id) return { ...r, position: p1 };
+            return r;
+        }).sort((a, b) => a.position - b.position);
+
+        // Update state immediately for responsive UI
+        const updatedThemes = themes.map(t =>
+            t.id === theme.id ? { ...t, resources: updatedResources } : t
+        );
+        setThemes(updatedThemes);
+        setTheme({ ...theme, resources: updatedResources });
+
+        // Persist
+        if (storageMode === 'supabase' && user) {
+            try {
+                await Promise.all([
+                    themeService.updateSupabaseResource(r1.id, { position: p2 }),
+                    themeService.updateSupabaseResource(r2.id, { position: p1 })
+                ]);
+            } catch (error) {
+                console.error('Failed to update resource positions:', error);
+            }
+        } else {
+            themeService.saveLocalThemes(updatedThemes);
         }
     };
 
@@ -225,6 +306,7 @@ export const useThemeData = (themeId?: string) => {
         deleteTheme,
         addResource,
         removeResource,
+        reorderResource,
         toggleResourceCompletion,
         updateNotes,
         updateThemeGoal,

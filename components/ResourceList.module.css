@@ -197,10 +197,6 @@
     background: rgba(14, 165, 233, 0.05);
 }
 
-.item:hover .removeBtn {
-    opacity: 1;
-}
-
 .itemCompleted {
     opacity: 0.6;
 }
@@ -280,13 +276,46 @@
     color: var(--color-text-muted);
     font-size: var(--text-lg);
     cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.2s, color 0.2s;
-    padding: 0;
+    transition: color 0.2s;
+    padding: 0 4px;
     line-height: 1;
     flex-shrink: 0;
 }
 
 .removeBtn:hover {
-    color: var(--color-error, #ef4444);
+    color: #ef4444;
+}
+
+.itemActions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.item:hover .itemActions {
+    opacity: 1;
+}
+
+.actionBtn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.actionBtn:hover {
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--color-primary);
+}
+
+.actionBtn:active {
+    transform: translateY(1px);
 }

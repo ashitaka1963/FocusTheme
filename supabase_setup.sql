@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS focus_theme.resources (
     url TEXT,
     type TEXT CHECK (type IN ('web', 'book', 'video', 'article', 'podcast', 'other')),
     completed BOOLEAN DEFAULT false,
+    position INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT now()
 );
 

@@ -12,6 +12,7 @@ interface ResourceListProps {
     theme: Theme;
     addResource: (resource: Resource) => void;
     removeResource: (resourceId: string) => void;
+    reorderResource: (resourceId: string, direction: 'up' | 'down') => void;
     toggleResourceCompletion: (resourceId: string) => void;
 }
 
@@ -73,6 +74,7 @@ export const ResourceList: React.FC<ResourceListProps> = ({
     theme,
     addResource,
     removeResource,
+    reorderResource,
     toggleResourceCompletion,
 }) => {
     const [newTitle, setNewTitle] = useState('');
@@ -97,6 +99,7 @@ export const ResourceList: React.FC<ResourceListProps> = ({
             url: newUrl.trim() ? (newUrl.startsWith('http') ? newUrl : `https://${newUrl}`) : undefined,
             type: newType,
             completed: false,
+            position: theme.resources.length > 0 ? Math.max(...theme.resources.map(r => r.position)) + 1 : 0
         });
 
         setNewTitle('');
@@ -245,12 +248,14 @@ export const ResourceList: React.FC<ResourceListProps> = ({
                                 <span className={styles.groupCount}>{group.resources.length}</span>
                             </div>
                             <div className={styles.groupItems}>
-                                {group.resources.map(resource => (
+                                {group.resources.map((resource, index) => (
                                     <ResourceItem
                                         key={resource.id}
                                         resource={resource}
                                         onToggle={() => handleToggle(resource.id, resource.completed)}
                                         onRemove={() => removeResource(resource.id)}
+                                        onMoveUp={index > 0 ? () => reorderResource(resource.id, 'up') : undefined}
+                                        onMoveDown={index < group.resources.length - 1 ? () => reorderResource(resource.id, 'down') : undefined}
                                     />
                                 ))}
                             </div>
@@ -258,12 +263,14 @@ export const ResourceList: React.FC<ResourceListProps> = ({
                     ))
                 ) : (
                     // Flat filtered view
-                    filteredResources.map(resource => (
+                    filteredResources.map((resource, index) => (
                         <ResourceItem
                             key={resource.id}
                             resource={resource}
                             onToggle={() => handleToggle(resource.id, resource.completed)}
                             onRemove={() => removeResource(resource.id)}
+                            onMoveUp={index > 0 ? () => reorderResource(resource.id, 'up') : undefined}
+                            onMoveDown={index < filteredResources.length - 1 ? () => reorderResource(resource.id, 'down') : undefined}
                             showType
                         />
                     ))
@@ -278,10 +285,12 @@ interface ResourceItemProps {
     resource: Resource;
     onToggle: () => void;
     onRemove: () => void;
+    onMoveUp?: () => void;
+    onMoveDown?: () => void;
     showType?: boolean;
 }
 
-const ResourceItem: React.FC<ResourceItemProps> = ({ resource, onToggle, onRemove, showType }) => {
+const ResourceItem: React.FC<ResourceItemProps> = ({ resource, onToggle, onRemove, onMoveUp, onMoveDown, showType }) => {
     return (
         <div className={`${styles.item} ${resource.completed ? styles.itemCompleted : ''}`}>
             <div className={styles.itemLeft}>
@@ -305,9 +314,25 @@ const ResourceItem: React.FC<ResourceItemProps> = ({ resource, onToggle, onRemov
                     <span className={styles.linkText}>{resource.title}</span>
                 )}
             </div>
-            <button className={styles.removeBtn} onClick={onRemove} title="Remove">
-                ×
-            </button>
+            <div className={styles.itemActions}>
+                {onMoveUp && (
+                    <button className={styles.actionBtn} onClick={onMoveUp} title="Move Up">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
+                    </button>
+                )}
+                {onMoveDown && (
+                    <button className={styles.actionBtn} onClick={onMoveDown} title="Move Down">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                )}
+                <button className={styles.removeBtn} onClick={onRemove} title="Remove">
+                    ×
+                </button>
+            </div>
         </div>
     );
 };
