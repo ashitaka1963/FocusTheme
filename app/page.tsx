@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/Card';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { ThemeList } from '@/components/ThemeList';
+import { ThemeIdeaList } from '@/components/ThemeIdeaList';
 import { FocusWidget } from '@/components/FocusWidget';
 import { useThemeData, THEME_COLORS } from '@/hooks/useThemeData';
 import { Auth } from '@/components/Auth';
@@ -148,7 +149,14 @@ export default function Home() {
         </div>
 
         <ThemeList themes={themes} onDelete={deleteTheme} />
+
+        <ThemeIdeaList onSelectIdea={(content) => {
+          setTheme(content);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }} />
       </main>
     </div >
   );
 }
+
+

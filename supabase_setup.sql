@@ -139,3 +139,29 @@ GRANT ALL ON TABLE focus_theme.resources TO authenticated;
 GRANT ALL ON TABLE focus_theme.learning_logs TO authenticated;
 GRANT USAGE ON SCHEMA focus_theme TO authenticated;
 GRANT USAGE ON SCHEMA focus_theme TO anon;
+-- Create theme_ideas table
+CREATE TABLE IF NOT EXISTS focus_theme.theme_ideas (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Enable RLS for theme_ideas
+ALTER TABLE focus_theme.theme_ideas ENABLE ROW LEVEL SECURITY;
+
+-- Policies for focus_theme.theme_ideas
+DROP POLICY IF EXISTS "Users can view their own ideas" ON focus_theme.theme_ideas;
+CREATE POLICY "Users can view their own ideas" ON focus_theme.theme_ideas
+    FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert their own ideas" ON focus_theme.theme_ideas;
+CREATE POLICY "Users can insert their own ideas" ON focus_theme.theme_ideas
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete their own ideas" ON focus_theme.theme_ideas;
+CREATE POLICY "Users can delete their own ideas" ON focus_theme.theme_ideas
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- Grant permissions for theme_ideas
+GRANT ALL ON TABLE focus_theme.theme_ideas TO authenticated;

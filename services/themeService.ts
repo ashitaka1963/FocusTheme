@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import { Theme, Resource, StorageMode } from '../types';
+import { Theme, Resource, StorageMode, ThemeIdea } from '../types';
 
 const STORAGE_KEY = 'focus_theme_data';
 
@@ -227,5 +227,60 @@ export const themeService = {
             .eq('id', id);
 
         if (error) throw error;
+    },
+
+    // Theme Ideas (ネタ帳)
+    getLocalIdeas(): ThemeIdea[] {
+        const stored = localStorage.getItem('focus_theme_ideas');
+        return stored ? JSON.parse(stored) : [];
+    },
+
+    saveLocalIdeas(ideas: ThemeIdea[]) {
+        localStorage.setItem('focus_theme_ideas', JSON.stringify(ideas));
+    },
+
+    async getSupabaseIdeas(): Promise<ThemeIdea[]> {
+        if (!supabase) throw new Error('Supabase client is not initialized');
+        const { data, error } = await supabase
+            .from('theme_ideas')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data.map((item: any) => ({
+            id: item.id,
+            content: item.content,
+            createdAt: new Date(item.created_at).getTime()
+        }));
+    },
+
+    async createSupabaseIdea(content: string): Promise<ThemeIdea> {
+        if (!supabase) throw new Error('Supabase client is not initialized');
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('User not authenticated');
+
+        const { data, error } = await supabase
+            .from('theme_ideas')
+            .insert({ user_id: user.id, content })
+            .select()
+            .single();
+
+        if (error) throw error;
+        return {
+            id: data.id,
+            content: data.content,
+            createdAt: new Date(data.created_at).getTime()
+        };
+    },
+
+    async deleteSupabaseIdea(id: string): Promise<void> {
+        if (!supabase) throw new Error('Supabase client is not initialized');
+        const { error } = await supabase
+            .from('theme_ideas')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
     }
 };
+

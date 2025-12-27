@@ -25,4 +25,10 @@ export interface Theme {
     color: string;
 }
 
+export interface ThemeIdea {
+    id: string;
+    content: string;
+    createdAt: number;
+}
+
 export type StorageMode = 'local' | 'supabase' | 'localstorage';
