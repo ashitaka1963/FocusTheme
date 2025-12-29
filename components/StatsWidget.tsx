@@ -3,25 +3,55 @@
 import React from 'react';
 import styles from './StatsWidget.module.css';
 import { Theme } from '@/hooks/useThemeData';
+import { themeService } from '@/services/themeService';
 
 interface StatsWidgetProps {
     themes: Theme[];
 }
 
 export const StatsWidget: React.FC<StatsWidgetProps> = ({ themes }) => {
+    const [totalFocusTime, setTotalFocusTime] = React.useState<number | null>(null);
+
+    React.useEffect(() => {
+        const calculateTotalFocus = async () => {
+            if (themes.length === 0) return;
+
+            try {
+                let totalMin = 0;
+                // Fetch logs for all themes and sum them up
+                // This handles cases where totalDuration might not have been recorded correctly
+                const logPromises = themes.map(t => themeService.getSupabaseLogs(t.id).catch(() => []));
+                const allLogsArray = await Promise.all(logPromises);
+
+                allLogsArray.forEach(logs => {
+                    logs.forEach((log: any) => {
+                        if (log.content && log.content.startsWith('⏱️ Focus Session:')) {
+                            const match = log.content.match(/(\d+) minutes/);
+                            if (match) {
+                                totalMin += parseInt(match[1]);
+                            }
+                        }
+                    });
+                });
+                setTotalFocusTime(totalMin);
+            } catch (err) {
+                console.error('Failed to calculate total focus:', err);
+                // Fallback to theme.totalDuration
+                const fallback = themes.reduce((acc, t) => acc + (t.totalDuration || 0), 0);
+                setTotalFocusTime(fallback);
+            }
+        };
+
+        calculateTotalFocus();
+    }, [themes]);
+
     if (themes.length === 0) return null;
 
     const totalThemes = themes.length;
 
-    const totalResources = themes.reduce((acc, theme) => acc + theme.resources.length, 0);
-
     const completedResources = themes.reduce((acc, theme) =>
         acc + theme.resources.filter(r => r.completed).length, 0
     );
-
-    const completionRate = totalResources > 0
-        ? Math.round((completedResources / totalResources) * 100)
-        : 0;
 
     // Calculate total learning days (sum of all theme durations)
     const totalDays = themes.reduce((acc, theme) => {
@@ -53,13 +83,12 @@ export const StatsWidget: React.FC<StatsWidgetProps> = ({ themes }) => {
             )
         },
         {
-            label: 'Completion Rate',
-            value: `${completionRate}%`,
+            label: 'Total Focus',
+            value: totalFocusTime !== null ? `${totalFocusTime} min` : '...',
             icon: (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="20" x2="18" y2="10"></line>
-                    <line x1="12" y1="20" x2="12" y2="4"></line>
-                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
             )
         },

@@ -1,0 +1,725 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 48px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+}
+
+.logoIcon {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    border-radius: 50%;
+}
+
+.nav {
+    display: flex;
+    gap: 32px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.nav span {
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav span:hover {
+    color: white;
+}
+
+.activeNav {
+    color: white !important;
+    position: relative;
+}
+
+.activeNav::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary);
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.timerWrapper {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+}
+
+.timerShifted {
+    transform: translateX(-240px);
+}
+
+.timerCircle {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timerContent {
+    position: absolute;
+    z-index: 2;
+    text-align: center;
+}
+
+.time {
+    font-size: 96px;
+    font-weight: 200;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.themeName {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.startBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 12px 32px;
+    letter-spacing: 0.2em;
+    border-radius: 100px;
+    transition: all 0.3s;
+    backdrop-filter: blur(4px);
+}
+
+.startBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.startBtn:active {
+    transform: translateY(0);
+}
+
+.mainActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.resetBtn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px 20px;
+    letter-spacing: 0.1em;
+    border-radius: 100px;
+    transition: all 0.3s;
+}
+
+.resetBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.progressRing {
+    transform: rotate(-90deg);
+}
+
+.progressRingCircle {
+    stroke: rgba(255, 255, 255, 0.05);
+    transition: stroke 0.5s;
+}
+
+.progressRingProgress {
+    transition: stroke-dashoffset 0.5s ease-in-out, stroke 0.5s, stroke-width 0.3s;
+}
+
+/* Status Specific Visuals */
+
+/* 1. Focusing State */
+.focusing .progressRingProgress {
+    animation: ringPulse 2s infinite ease-in-out;
+    stroke-width: 4;
+}
+
+@keyframes ringPulse {
+    0% {
+        filter: drop-shadow(0 0 2px var(--color-primary));
+        stroke-width: 4;
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px var(--color-primary));
+        stroke-width: 5;
+    }
+
+    100% {
+        filter: drop-shadow(0 0 2px var(--color-primary));
+        stroke-width: 4;
+    }
+}
+
+/* 2. Paused State */
+.paused .progressRingProgress {
+    stroke-dasharray: 4, 4;
+    opacity: 0.5;
+    stroke: #94a3b8;
+    /* Slate color */
+}
+
+.paused .time {
+    opacity: 0.6;
+}
+
+/* 3. Break State */
+.onBreak .progressRingProgress {
+    stroke: var(--color-secondary);
+    filter: drop-shadow(0 0 8px rgba(20, 184, 166, 0.4));
+}
+
+.onBreak .logoIcon {
+    background: linear-gradient(135deg, #14b8a6, #10b981);
+}
+
+/* Adjustments for Side Panels */
+.sidePanel {
+    position: absolute;
+    right: 15%;
+    width: 420px;
+    height: 500px;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.panelHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    color: var(--color-primary);
+}
+
+.panelHeader h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: white;
+}
+
+.panelContent {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.panelContent::-webkit-scrollbar {
+    width: 4px;
+}
+
+.panelContent::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.panelSection {
+    margin-bottom: 32px;
+}
+
+.panelSection label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.objectiveText {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.resourceBriefList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.resourceBriefItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.resourceBriefItem.completed {
+    opacity: 0.6;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+.resourceBriefItem.completed .dot {
+    background: var(--color-secondary);
+}
+
+.resourceTitle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.notesPreview {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    white-space: pre-wrap;
+}
+
+/* Analytics specific */
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.miniStatCard {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.statLabel {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.statValue {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+}
+
+.progressTracker {
+    margin-bottom: 32px;
+}
+
+.trackerLabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+}
+
+.trackerBar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.trackerFill {
+    height: 100%;
+    background: var(--gradient-premium);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+}
+
+.infoBox {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(14, 165, 233, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(14, 165, 233, 0.1);
+    color: rgba(14, 165, 233, 0.8);
+    font-size: 13px;
+}
+
+/* Settings specific */
+.durationButtons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.durationBtn {
+    padding: 12px 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.durationBtn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.durationBtn:hover:not(.active) {
+    background: rgba(14, 165, 233, 0.1);
+    border-color: rgba(14, 165, 233, 0.3);
+}
+
+.subLabel {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 48px;
+    position: relative;
+    z-index: 5;
+}
+
+.iconBtn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.3s;
+}
+
+.iconBtn:hover {
+    color: white;
+    transform: rotate(90deg);
+}
+
+.sessionType {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+    transition: color 0.3s;
+}
+
+.cycleIndicator {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.cycleControls {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.cycleBtn {
+    padding: 10px 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cycleBtn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+/* Break Mode Overrides */
+.breakMode .sessionType {
+    color: var(--color-secondary);
+}
+
+.breakMode .activeNav::after {
+    background: var(--color-secondary);
+    box-shadow: 0 0 8px var(--color-secondary);
+}
+
+.breakMode .miniStatCard .statValue {
+    color: var(--color-secondary);
+}
+
+.breakMode .durationBtn.active,
+.breakMode .cycleBtn.active {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+
+.analyticsSection {
+    margin-bottom: 24px;
+}
+
+.barChart {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 120px;
+    padding: 10px 0;
+    gap: 8px;
+}
+
+.barWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.barContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.bar {
+    width: 12px;
+    background: var(--gradient-premium);
+    border-radius: 6px 6px 2px 2px;
+    transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+}
+
+/* Immersion & Transitions */
+.header,
+.nav,
+.sidePanel,
+.footer,
+.mainActions,
+.cycleIndicator,
+.themeName {
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.starting .header,
+.starting .footer,
+.starting .sidePanel {
+    opacity: 0;
+    pointer-events: none;
+    filter: blur(8px);
+}
+
+/* Deep Focus Mode (Active focusing) */
+.deepFocus .header,
+.deepFocus .footer,
+.deepFocus .sidePanel {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+}
+
+.deepFocus .sidePanel {
+    transform: translateX(40px);
+    opacity: 0;
+}
+
+.deepFocus .themeName {
+    opacity: 1;
+    color: var(--color-primary);
+    transform: translateY(-20px);
+    font-size: 12px;
+}
+
+.deepFocus .cycleIndicator {
+    opacity: 0.3;
+}
+
+.deepFocus .startBtn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    padding: 8px 24px;
+    font-size: 11px;
+}
+
+.deepFocus .startBtn:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.deepFocus .timerWrapper {
+    transform: scale(1.1);
+}
+
+/* Gateway Countdown Overlay */
+.gatewayOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(40px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInOverlay 0.5s ease-out;
+}
+
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
+
+    to {
+        opacity: 1;
+        backdrop-filter: blur(40px);
+    }
+}
+
+.countdownBox {
+    text-align: center;
+    color: white;
+}
+
+.countdownNumber {
+    font-size: 160px;
+    font-weight: 200;
+    line-height: 1;
+    margin-bottom: 24px;
+    font-variant-numeric: tabular-nums;
+    animation: pulseNumber 1s infinite cubic-bezier(0.16, 1, 0.3, 1);
+    background: linear-gradient(135deg, white, var(--color-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@keyframes pulseNumber {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+.countdownLabel {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 32px;
+}
+
+.countdownGoal {
+    font-size: 24px;
+    font-weight: 400;
+    max-width: 600px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.barLabel {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}

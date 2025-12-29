@@ -6,6 +6,7 @@ import styles from './FocusWidget.module.css';
 import { Button } from './ui/Button';
 import { ProgressBar } from './ProgressBar';
 import { Theme } from '@/hooks/useThemeData';
+import { Timer, ArrowRight } from 'lucide-react';
 
 interface FocusWidgetProps {
     theme: Theme;
@@ -56,9 +57,16 @@ export const FocusWidget: React.FC<FocusWidgetProps> = ({ theme }) => {
             </div>
 
             <div className={styles.action}>
+                <Link href={`/focus?id=${theme.id}`}>
+                    <Button size="lg" className={`${styles.button} ${styles.timerButton}`}>
+                        <Timer size={20} style={{ marginRight: '8px' }} />
+                        Start Timer
+                    </Button>
+                </Link>
                 <Link href={`/dashboard?id=${theme.id}`}>
-                    <Button size="lg" className={styles.button}>
-                        Continue Learning →
+                    <Button variant="ghost" className={`${styles.button} ${styles.dashboardButton}`}>
+                        Dashboard
+                        <ArrowRight size={16} style={{ marginLeft: '8px' }} />
                     </Button>
                 </Link>
             </div>

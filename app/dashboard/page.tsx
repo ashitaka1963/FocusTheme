@@ -15,6 +15,8 @@ import { DatePicker } from '@/components/ui/DatePicker';
 import { useThemeData } from '@/hooks/useThemeData';
 import { useAuth } from '@/context/AuthContext';
 import { Auth } from '@/components/Auth';
+import { FocusMode } from '@/components/ambient/FocusMode';
+import { Maximize2 } from 'lucide-react';
 
 function DashboardContent() {
     const searchParams = useSearchParams();
@@ -182,6 +184,15 @@ function DashboardContent() {
                                     <Button variant="ghost" size="sm" onClick={handleCancelEditDates}>Cancel</Button>
                                 </div>
                             )}
+                        </div>
+
+                        <div className={styles.headerActions}>
+                            <Link href={`/focus?id=${theme.id}`}>
+                                <Button className={styles.focusBtn}>
+                                    <Maximize2 size={16} style={{ marginRight: '8px' }} />
+                                    Enter Focus Mode
+                                </Button>
+                            </Link>
                         </div>
 
                         {!isEditingGoal ? (

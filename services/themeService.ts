@@ -200,14 +200,17 @@ export const themeService = {
         }));
     },
 
-    async createSupabaseLog(themeId: string, content: string): Promise<any> {
+    async createSupabaseLog(themeId: string, content: string, date?: string): Promise<any> {
         if (!supabase) throw new Error('Supabase client is not initialized');
+        const insertData: any = {
+            theme_id: themeId,
+            content: content
+        };
+        if (date) insertData.date = date;
+
         const { data, error } = await supabase
             .from('learning_logs')
-            .insert({
-                theme_id: themeId,
-                content: content
-            })
+            .insert(insertData)
             .select()
             .single();
 
