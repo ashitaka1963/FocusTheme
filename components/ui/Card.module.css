@@ -12,3 +12,9 @@
     box-shadow: var(--shadow-md);
     border-color: var(--color-primary);
 }
+
+@media (max-width: 768px) {
+    .card {
+        padding: var(--spacing-md);
+    }
+}
