@@ -251,3 +251,77 @@
     cursor: pointer;
     box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
 }
+
+/* ==================== Mobile Responsive ==================== */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .soundGrid {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .musicGroup {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .selectorWrapper {
+        width: 100%;
+    }
+
+    .musicSelect {
+        width: 100%;
+        flex: 1;
+    }
+
+    .advancedOptions {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0 0;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .volumeControl {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .slider {
+        flex: 1;
+        width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px 12px;
+        border-radius: 16px;
+    }
+
+    .musicLabel {
+        font-size: 9px;
+    }
+
+    .musicSelect {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .checkboxLabel {
+        font-size: 11px;
+    }
+}
