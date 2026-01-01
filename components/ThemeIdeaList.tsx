@@ -87,21 +87,21 @@ export const ThemeIdeaList: React.FC<ThemeIdeaListProps> = ({ onSelectIdea }) =>
                 <div className={styles.grid}>
                     {ideas.map((idea) => (
                         <Card key={idea.id} hoverable className={styles.ideaCard}>
+                            <div className={styles.cardDecoration}>
+                                <Lightbulb size={80} strokeWidth={1} />
+                            </div>
                             <p className={styles.content}>{idea.content}</p>
                             <div className={styles.footer}>
-                                <div className={styles.leftFooter}>
-                                    <span className={styles.date}>{formatDate(idea.createdAt)}</span>
-                                    {onSelectIdea && (
-                                        <button
-                                            onClick={() => onSelectIdea(idea.content)}
-                                            className={styles.useIdeaBtn}
-                                            title="Start a theme with this idea"
-                                        >
-                                            <ArrowUpRight size={14} />
-                                            <span>Use</span>
-                                        </button>
-                                    )}
-                                </div>
+                                {onSelectIdea && (
+                                    <button
+                                        onClick={() => onSelectIdea(idea.content)}
+                                        className={styles.useIdeaBtn}
+                                        title="Start a theme with this idea"
+                                    >
+                                        <ArrowUpRight size={16} />
+                                        <span>Use This</span>
+                                    </button>
+                                )}
                                 <button
                                     onClick={() => deleteIdea(idea.id)}
                                     className={styles.deleteBtn}

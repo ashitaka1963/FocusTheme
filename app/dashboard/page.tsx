@@ -164,7 +164,7 @@ function DashboardContent() {
                                 </div>
                             ) : (
                                 <div className={styles.dateRow}>
-                                    <div style={{ width: '140px' }}>
+                                    <div style={{ flex: 1, minWidth: '130px' }}>
                                         <DatePicker
                                             selected={editStartDate}
                                             onChange={(date) => setEditStartDate(date)}
@@ -172,7 +172,7 @@ function DashboardContent() {
                                         />
                                     </div>
                                     <span className={styles.dateSeparator}>-</span>
-                                    <div style={{ width: '140px' }}>
+                                    <div style={{ flex: 1, minWidth: '130px' }}>
                                         <DatePicker
                                             selected={editEndDate}
                                             onChange={(date) => setEditEndDate(date)}

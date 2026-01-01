@@ -218,3 +218,17 @@
     transform: translateY(0);
   }
 }
+
+@media (max-width: 768px) {
+  .page {
+    padding: var(--spacing-sm);
+  }
+
+  .title {
+    font-size: 2.0rem;
+  }
+
+  .main {
+    width: 100%;
+  }
+}
